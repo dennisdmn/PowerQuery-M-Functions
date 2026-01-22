@@ -1,19 +1,52 @@
-# Power Query M Functions
+# Power Query M Functions 📦
 
-Coleção de funções personalizadas do Power Query (M) para Excel e Power BI.
+Repositório de funções personalizadas do Power Query (linguagem M) para Excel e Power BI, criadas com auxílio de Inteligência Artificial.
 
-## Funções Disponíveis
+## 📌 Sobre este Repositório
+
+Este repositório centraliza funções customizadas do Power Query organizadas por segmentos/categorias, facilitando a reutilização e manutenção de código em projetos de análise de dados.
+
+## 📂 Estrutura por Segmentos
+
+### 📝 Tratamento de Texto
+Funções para manipulação, limpeza e transformação de strings.
+
+- **[SubstituirTextoExato.pq](SubstituirTextoExato.pq)** - Substitui valores completos usando tabela de-para (match exato, não frações)
+
+### 🎯 Tratamento de Cabeçalhos
+*Em breve: Funções para normalização e padronização de cabeçalhos de tabelas*
+
+### ⚙️ Transformação de Colunas
+*Em breve: Funções para manipulação avançada de colunas*
+
+### 🔀 Condicionais
+*Em breve: Funções para lógica condicional complexa*
+
+### 📅 Tratamento de Datas
+*Em breve: Funções para manipulação de datas e períodos*
+
+### 📊 Análise e Validação
+*Em breve: Funções para validação de dados e qualidade*
+
+---
+
+## 📖 Documentação das Funções
 
 ### SubstituirTextoExato
 
-**Descrição:** Substitui valores de uma coluna usando uma tabela de-para, apenas quando há correspondência exata do campo completo (não substitui frações de texto).
+**Categoria:** Tratamento de Texto  
+**Arquivo:** [SubstituirTextoExato.pq](SubstituirTextoExato.pq)
+
+**Descrição:**  
+Substitui valores de uma coluna usando uma tabela de-para, realizando correspondência exata do campo completo. Não substitui frações ou partes de texto.
 
 **Parâmetros:**
 - `TabelaOriginal` (table): Tabela onde será feita a substituição
 - `NomeColuna` (text): Nome da coluna onde os valores serão substituídos
 - `TabelaSubstituicao` (table): Tabela de-para com colunas "TextoAntigo" e "TextoNovo"
 
-**Retorno:** Tabela com os valores substituídos
+**Retorno:**  
+Tabela com os valores substituídos
 
 **Estrutura da Tabela De-Para:**
 ```
@@ -35,22 +68,54 @@ in
 ```
 
 **Comportamento:**
-- "São Paulo" → "SP" (substitui campo completo)
-- "São Paulo Centro" → "São Paulo Centro" (não substitui, pois não é exatamente "São Paulo")
-- "Rio" → "Rio" (mantém original se não houver correspondência exata)
+- ✅ "São Paulo" → "SP" (substitui campo completo)
+- ❌ "São Paulo Centro" → "São Paulo Centro" (não substitui - não é match exato)
+- ❌ "Paulo" → "Paulo" (mantém original - sem correspondência)
 
-## Como Usar no Power Query
+---
 
-1. Baixe o arquivo `.pq` da função desejada
-2. No Power Query Editor, vá em **Início** → **Nova Consulta** → **Outras Fontes** → **Consulta em Branco**
-3. Abra o **Editor Avançado** e cole o código da função
+## 🚀 Como Usar
+
+### Método 1: Importar Função Individual
+
+1. Acesse o arquivo `.pq` da função desejada neste repositório
+2. Copie o código da função
+3. No Power Query Editor:
+   - Vá em **Início** → **Nova Consulta** → **Outras Fontes** → **Consulta em Branco**
+   - Clique em **Editor Avançado**
+   - Cole o código da função
+   - Clique em **Concluído**
 4. Renomeie a consulta com o nome da função (ex: `SubstituirTextoExato`)
-5. Use a função em suas queries conforme os exemplos
+5. A função estará disponível para uso em outras queries
 
-## Contribuições
+### Método 2: Carregar do GitHub (Direto)
 
-Sugestões e melhorias são bem-vindas!
+```m
+let
+    Fonte = Web.Contents("https://raw.githubusercontent.com/dennisdmn/PowerQuery-M-Functions/main/SubstituirTextoExato.pq"),
+    Funcao = Expression.Evaluate(Text.FromBinary(Fonte), #shared)
+in
+    Funcao
+```
 
-## Licença
+## 🤖 Sobre a Criação com IA
+
+Todas as funções deste repositório foram desenvolvidas com auxílio de Inteligência Artificial, combinando:
+- Expertise em Power Query e linguagem M
+- Boas práticas de programação funcional
+- Documentação detalhada e exemplos práticos
+- Testes e validações de casos de uso reais
+
+## 💬 Contribuições
+
+Sugestões, melhorias e novas funções são bem-vindas!  
+Sinta-se à vontade para abrir issues ou pull requests.
+
+## 📜 Licença
 
 MIT License - Uso livre para projetos pessoais e comerciais.
+
+---
+
+**Desenvolvido por:** [@dennisdmn](https://github.com/dennisdmn)  
+**Última atualização:** Janeiro 2026
