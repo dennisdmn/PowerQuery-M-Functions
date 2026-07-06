@@ -26,7 +26,14 @@ Funções para manipulação, limpeza e transformação de strings.
 *Em breve: Funções para manipulação de datas e períodos*
 
 ### 📊 Análise e Validação
-*Em breve: Funções para validação de dados e qualidade*
+Funções para validação de dados, qualidade, auditoria de campos obrigatórios e conferência de layouts.
+
+- **[fxValidaCamposObrigatorios.pq](validacao/fxValidaCamposObrigatorios.pq)** - Valida múltiplas colunas obrigatórias informadas como texto separado por vírgula e retorna campos em branco por linha
+
+### 🧪 Exemplos
+Consultas de exemplo para testar e adaptar as funções do repositório.
+
+- **[fxValidaCamposObrigatorios_exemplo.pq](exemplos/fxValidaCamposObrigatorios_exemplo.pq)** - Exemplo com base contábil simulada e validação de campos obrigatórios
 
 ---
 
@@ -48,15 +55,6 @@ Substitui valores de uma coluna usando uma tabela de-para, realizando correspond
 **Retorno:**  
 Tabela com os valores substituídos
 
-**Estrutura da Tabela De-Para:**
-```
-| TextoAntigo    | TextoNovo |
-|----------------|-----------||
-| São Paulo      | SP        |
-| Rio de Janeiro | RJ        |
-| Minas Gerais   | MG        |
-```
-
 **Exemplo de Uso:**
 ```m
 let
@@ -67,10 +65,62 @@ in
     Resultado
 ```
 
+---
+
+### fxValidaCamposObrigatorios
+
+**Categoria:** Análise e Validação  
+**Arquivo:** [validacao/fxValidaCamposObrigatorios.pq](validacao/fxValidaCamposObrigatorios.pq)  
+**Exemplo:** [exemplos/fxValidaCamposObrigatorios_exemplo.pq](exemplos/fxValidaCamposObrigatorios_exemplo.pq)
+
+**Descrição:**  
+Valida, linha a linha, se colunas obrigatórias estão nulas, vazias ou preenchidas apenas com espaços. As colunas obrigatórias são informadas em um único texto separado por vírgula, facilitando o uso pela janela **Invocar Função Personalizada** do Power Query.
+
+**Parâmetros:**
+- `Tabela` (table): Tabela que será validada
+- `ColunasObrigatoriasTexto` (text): Lista de colunas obrigatórias em texto, separadas por vírgula
+- `NomeColunaErros` (nullable text, opcional): Nome da coluna que listará os campos em branco. Padrão: `Campos_Em_Branco`
+- `NomeColunaStatus` (nullable text, opcional): Nome da coluna de status. Padrão: `Status_Validacao`
+
+**Retorno:**  
+Tabela original acrescida de duas colunas:
+- `Campos_Em_Branco`: lista das colunas obrigatórias em branco naquela linha
+- `Status_Validacao`: retorna `OK` ou `Campo obrigatório em branco`
+
+**Exemplo de Uso:**
+```m
+let
+    Fonte = Etapa_DefineTipos,
+
+    Etapa_ValidaCamposObrigatorios = fxValidaCamposObrigatorios(
+        Fonte,
+        "empresa, filial, debito, credito, valor, hist, ccustod, ccustoc, usuario, clvlrdeb, clvlrcrd, ent05deb, ent05crd, tpsaldo, lote, versao, data"
+    )
+in
+    Etapa_ValidaCamposObrigatorios
+```
+
+**Exemplo com nomes personalizados:**
+```m
+let
+    Fonte = Etapa_DefineTipos,
+
+    Etapa_ValidaCamposObrigatorios = fxValidaCamposObrigatorios(
+        Fonte,
+        "empresa, filial, debito, credito, valor, data",
+        "Campos_Com_Problema",
+        "Status"
+    )
+in
+    Etapa_ValidaCamposObrigatorios
+```
+
 **Comportamento:**
-- ✅ "São Paulo" → "SP" (substitui campo completo)
-- ❌ "São Paulo Centro" → "São Paulo Centro" (não substitui - não é match exato)
-- ❌ "Paulo" → "Paulo" (mantém original - sem correspondência)
+- `null` é tratado como campo obrigatório em branco
+- texto vazio é tratado como campo obrigatório em branco
+- texto apenas com espaços é tratado como campo obrigatório em branco
+- campos preenchidos retornam status `OK`
+- coluna obrigatória informada, mas ausente na tabela, será tratada como campo em branco
 
 ---
 
@@ -85,18 +135,8 @@ in
    - Clique em **Editor Avançado**
    - Cole o código da função
    - Clique em **Concluído**
-4. Renomeie a consulta com o nome da função (ex: `SubstituirTextoExato`)
+4. Renomeie a consulta com o nome da função, por exemplo `fxValidaCamposObrigatorios`
 5. A função estará disponível para uso em outras queries
-
-### Método 2: Carregar do GitHub (Direto)
-
-```m
-let
-    Fonte = Web.Contents("https://raw.githubusercontent.com/dennisdmn/PowerQuery-M-Functions/main/SubstituirTextoExato.pq"),
-    Funcao = Expression.Evaluate(Text.FromBinary(Fonte), #shared)
-in
-    Funcao
-```
 
 ## 🤖 Sobre a Criação com IA
 
@@ -118,4 +158,4 @@ MIT License - Uso livre para projetos pessoais e comerciais.
 ---
 
 **Desenvolvido por:** [@dennisdmn](https://github.com/dennisdmn)  
-**Última atualização:** Janeiro 2026
+**Última atualização:** Julho 2026
